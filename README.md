@@ -1,4 +1,4 @@
-# Climbing Tracker
+# Climbing Tracker / Tietokannat ja web-ohjelmointi, Kevät 2024
 
 Sovelluksen avulla käyttäjä pystyy seuraamaan omaa kiipeily kehitystään, ja jakamaan saavutuksiaan ja tavoitteittaan. 
 Pääpiirteenä on juuri omien kiivettyjen reittien ja kehityksen seuaranta, mutta myös niiden jakaminen muiden kanssaharrastajien kesken.
