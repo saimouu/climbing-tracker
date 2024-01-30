@@ -1,0 +1,14 @@
+<h2>added routes</h2>
+{% if session.user_id  %}
+<p>logged in</p>
+<a href="/logout">logout</a>
+{% else %}
+<a href="/login">login</a>
+{% endif %}
+<hr>
+{% for route in routes %}
+{{ route.grade }}
+{{ route.location }}
+<hr>
+{% endfor %}
+<a href="/new">create new</a>
