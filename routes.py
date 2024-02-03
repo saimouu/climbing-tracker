@@ -1,6 +1,5 @@
 from app import app
-import climbs
-import users
+import climbs, users, comments
 from flask import render_template, request, redirect
 
 @app.route("/")
@@ -56,4 +55,12 @@ def logout():
 @app.route("/climb/<int:id>")
 def climb(id):
     route = climbs.get_climb_by_id(id)
-    return render_template("climb.html", route=route)
+    contents = comments.get_comments_by_climb(id)
+    print(contents)
+    return render_template("climb.html", route=route, contents=contents)    # fix naming....
+
+@app.route("/comment/<int:id>", methods=["POST"])
+def comment(id):
+    content = (request.form["content"], id)
+    if comments.add_comment(content):
+        return redirect(f"/climb/{id}")

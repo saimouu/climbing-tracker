@@ -8,3 +8,15 @@
 <hr>
 <a href="/">go back</a>
 <h3>comments</h3>
+<form action="/comment/{{ route.id }}" method="POST">
+add a comment: <br>
+<textarea name="content" rows="3" cols="40"></textarea><br>
+<input type="submit" value="comment">
+</form><br>
+<hr>
+{% for comment in contents %}
+<b>comment:</b> {{ comment.content }}<br>
+<b>sent by:</b> {{ comment.username }}
+<b>time:</b> {{ comment.time.strftime("%M:%H, %d-%m-%Y") }}
+<hr>
+{% endfor %}

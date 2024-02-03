@@ -11,7 +11,7 @@
 <b>grade:</b> {{ route.grade }}<br/>
 <b>location:</b> {{ route.location }}<br/>
 <b>user:</b> {{ route.username }} <br/>
-<b>added:</b> {{ route.time.strftime("%d-%m-%Y") }}
+<b>added:</b> {{ route.time.strftime("%M:%H, %d-%m-%Y") }}
 <hr>
 {% endfor %}
 <a href="/new">create new</a>
