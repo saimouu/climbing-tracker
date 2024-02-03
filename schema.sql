@@ -8,4 +8,12 @@ CREATE TABLE routes (
     grade TEXT,
     location TEXT,
     user_id INTEGER REFERENCES users
+    time TIMESTAMP
+);
+
+CREATE TABLE comments (
+    id SERIAL PRIMARY KEY,
+    content TEXT,
+    user_id INTEGER REFERENCES users,
+    route_id INTEGER REFERENCES routes
 );

@@ -5,8 +5,11 @@ from flask import render_template, request, redirect
 
 @app.route("/")
 def index():
-    routes = climbs.get_all_climbs()
-    return render_template("index.html", routes=routes)
+    if users.user_id() != 0:
+        routes = climbs.get_all_climbs()
+        return render_template("index.html", routes=routes)
+    else:
+        return redirect("/login")
 
 @app.route("/new")
 def new():
@@ -49,3 +52,8 @@ def register():
 def logout():
     users.logout()
     return redirect("/")
+
+@app.route("/climb/<int:id>")
+def climb(id):
+    route = climbs.get_climb_by_id(id)
+    return render_template("climb.html", route=route)
