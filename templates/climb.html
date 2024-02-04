@@ -3,7 +3,7 @@
 <hr>
 <b>grade:</b> {{ route.grade }}<br/>
 <b>location:</b> {{ route.location }}<br/>
-<b>user:</b> {{ route.username }} <br/>
+<b>user:</b> <a href="/user/{{ route.user_id }}">{{ route.username }}</a> <br/>
 <b>added:</b> {{ route.time.strftime("%d-%m-%Y") }}
 <hr>
 <a href="/">go back</a>
@@ -16,7 +16,7 @@ add a comment: <br>
 <hr>
 {% for comment in contents %}
 <b>comment:</b> {{ comment.content }}<br>
-<b>sent by:</b> {{ comment.username }}
-<b>time:</b> {{ comment.time.strftime("%M:%H, %d-%m-%Y") }}
+<b>sent by:</b> <a href="/user/{{ route.user_id }}">{{ comment.username }}</a>
+<b>time:</b> {{ comment.time.strftime("%H:%M, %d-%m-%Y") }}
 <hr>
 {% endfor %}

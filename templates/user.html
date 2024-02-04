@@ -1,0 +1,18 @@
+<h2>{{ username }}</h2>
+{% if count != 0 %}
+<p>number of routes added by {{ routes[0].username }}: {{ count }}</p>
+<hr>
+{% for route in routes %}
+<a href="/climb/{{ route.id }}">go to climb</a><br/>
+<b>grade:</b> {{ route.grade }}<br/>
+<b>location:</b> {{ route.location }}<br/>
+<b>added:</b> {{ route.time.strftime("%M:%H, %d-%m-%Y") }}<br/>
+{% if routes[0].username == session.username %}
+<a href="/delete/{{ route.id }}">delete climb</a>
+{% endif %}
+<hr>
+{% endfor %}
+{% else %}
+<p>no routes added yet...</p>
+{% endif %}
+<a href="/">go back</a>

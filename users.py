@@ -12,6 +12,7 @@ def login(username, password):
     else:
         if check_password_hash(user.password, password):
             session["user_id"] = user.id
+            session["username"] = username
             return True
         else:
             return False
@@ -31,3 +32,8 @@ def logout():
 
 def user_id():
     return session.get("user_id", 0)
+
+def get_name_by_id(id):
+    sql = text("SELECT username FROM users WHERE id=:id")
+    result = db.session.execute(sql, {"id": id})
+    return result.fetchone().username

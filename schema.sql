@@ -8,7 +8,8 @@ CREATE TABLE routes (
     grade TEXT,
     location TEXT,
     user_id INTEGER REFERENCES users,
-    time TIMESTAMP
+    time TIMESTAMP,
+    visible BOOLEAN
 );
 
 CREATE TABLE comments (
