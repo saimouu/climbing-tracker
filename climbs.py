@@ -7,16 +7,28 @@ def get_all_climbs():
     result = db.session.execute(sql)
     return result.fetchall()
 
-# content is a tuple where (grade, location)
-def create_climb(content: tuple):
-    grade = content[0]
-    location = content[1]
+def check_climb_content(content):
+    if len(content["grade"]) < 1 or len(content["location"]) < 2:
+        return False
+    return True
+
+def create_climb(content):
+    # TODO: different error message
+    if not check_climb_content(content=content):
+        return False
+    grade = content["grade"]
+    location = content["location"]
+    indoor = content["indoor"]
+    flash = content["flash"]
     user_id = users.user_id()
     if user_id != 0:       
-        sql = text("INSERT INTO routes (grade, location, user_id, time, visible) VALUES (:grade, :location, :user_id, NOW(), TRUE)")
-        db.session.execute(sql, {"grade": grade, "location": location, "user_id": user_id})
+        sql = """INSERT INTO routes (grade, location, user_id, time, visible, indoor) 
+        VALUES (:grade, :location, :user_id, NOW(), TRUE, :indoor) RETURNING id"""
+        temp_id_object = db.session.execute(text(sql), {"grade": grade, "location": location, "user_id": user_id, "indoor": indoor})
         db.session.commit()
-        return True
+        route_id = temp_id_object.fetchone().id
+        if add_flash_data(user_id=user_id, route_id=route_id, flash=flash):
+            return True
     else:
         return False
 
@@ -37,3 +49,17 @@ def delete_climb(id):
         db.session.commit()
         return True
     return False
+
+def get_users_hardest_climb(user_id):
+    sql = text("SELECT R.grade, R.time FROM routes R, users U WHERE R.user_id=U.id and U.id=:user_id AND R.visible=True ORDER BY R.grade DESC;")
+    result = db.session.execute(sql, {"user_id": user_id}).fetchone()
+    return result
+
+def add_flash_data(route_id, user_id, flash):
+    try:
+        sql = text("INSERT INTO flashes (route_id, user_id, flash) VALUES (:route_id, :user_id, :flash)")
+        db.session.execute(sql, {"route_id": route_id, "user_id": user_id, "flash": flash})
+        db.session.commit()
+        return True
+    except:
+        return False

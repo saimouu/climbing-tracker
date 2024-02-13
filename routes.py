@@ -20,7 +20,13 @@ def new():
 def create():
     grade = request.form["grade"]
     location = request.form["location"]
-    if climbs.create_climb((grade, location)):
+    flash = request.form["flash"]
+    if request.form["indoor"] == "indoor":
+        indoor = True
+    else:
+        indoor = False
+
+    if climbs.create_climb({"grade": grade, "location": location, "indoor": indoor, "flash": flash}):
         return redirect("/")
     else:
         return render_template("error.html", message="you are not logged in")
@@ -47,6 +53,8 @@ def register():
         password2 = request.form["password2"]
         if password1 != password2:
             return render_template("error.html", message="password don't match")
+        if not users.valid_register(username, password1):
+            return render_template("error.html", message="invalid username or password. username must be atleast 4 letters and password 6.")
         if users.register(username, password1):
             return redirect("/")
         else:
@@ -72,9 +80,12 @@ def comment(id):
 @app.route("/user/<int:id>")
 def user_page(id):
     routes = climbs.get_climbs_by_user(id)
+    hardest_route = climbs.get_users_hardest_climb(id)
     username = users.get_name_by_id(id)
-    return render_template("user.html", routes=routes, count=len(routes), username=username)
+    # fix: user sql count not len
+    return render_template("user.html", routes=routes, count=len(routes), username=username, hardest_route=hardest_route)  
 
+# fix redirect
 @app.route("/delete/<int:id>")
 def remove_climb(id):
     if climbs.delete_climb(id):

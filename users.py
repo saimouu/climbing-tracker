@@ -37,3 +37,8 @@ def get_name_by_id(id):
     sql = text("SELECT username FROM users WHERE id=:id")
     result = db.session.execute(sql, {"id": id})
     return result.fetchone().username
+
+def valid_register(username, password):
+    if len(password) < 6 or len(username) < 4:
+        return False
+    return True

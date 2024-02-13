@@ -6,7 +6,7 @@
 <b>grade:</b> {{ route.grade }}<br/>
 <b>location:</b> {{ route.location }}<br/>
 <b>added by:</b><a href="/user/{{ route.user_id }}">{{ route.username }}</a> <br/>
-<b>time:</b> {{ route.time.strftime("%M:%H, %d-%m-%Y") }}
+<b>time:</b> {{ route.time.strftime("%H:%M, %d-%m-%Y") }}
 <hr>
 {% endfor %}
 {% else %}
