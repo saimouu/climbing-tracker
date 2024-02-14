@@ -1,4 +1,7 @@
-<h2>register</h2>
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block header %}<h2>Register</h2>{% endblock %}
+{% block content %}
 <form action="/register" method="POST">
 <p>username:<br>
 <input type="text" name="username"></p>
@@ -9,3 +12,4 @@
 <input type="submit" value="register">
 </form>
 To login click <a href="/login">here</a>
+{% endblock %}

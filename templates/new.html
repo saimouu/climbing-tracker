@@ -1,16 +1,19 @@
-<h2>new route</h2>
+{% extends "base.html" %}
+{% block title %}Create{% endblock %}
+{% block header %}<h2>Add a new route</h2>{% endblock %}
+{% block content %}
 <form action="/create" method="POST">
 Grade:<br>
 <textarea name="grade" rows="1" cols="40"></textarea><br>
 Location:<br>
 <textarea name="location" rows="1" cols="40"></textarea>
 <br>
-indoor/outdoor:
+Indoor/Outdoor:
 <select name="indoor" id="indoor">
     <option value="indoor">indoor</option>
     <option value="outdoor">outdoor</option>
 </select><br>
-flash:
+Flash:
 <select name="flash" id="flash">
     <option value="False">no</option>
     <option value="True">yes</option>
@@ -18,3 +21,4 @@ flash:
 <br>
 <input type="submit" value="submit">
 </form>
+{% endblock %}

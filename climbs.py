@@ -3,7 +3,7 @@ from sqlalchemy.sql import text
 import users
 
 def get_all_climbs():
-    sql = text("SELECT R.grade, R.location, R.time, R.id, U.username, R.user_id FROM routes R, users U WHERE R.user_id = U.id AND R.visible=TRUE;")
+    sql = text("SELECT R.grade, R.location, R.time, R.id, U.username, R.user_id FROM routes R, users U WHERE R.user_id = U.id AND R.visible=TRUE ORDER BY R.time DESC;")
     result = db.session.execute(sql)
     return result.fetchall()
 
@@ -38,7 +38,7 @@ def get_climb_by_id(id):
     return result
 
 def get_climbs_by_user(id):
-    sql = text("SELECT R.grade, R.location, R.time, R.id, U.username FROM routes R, users U WHERE U.id = R.user_id AND R.user_id = :id AND R.visible = TRUE;")
+    sql = text("SELECT R.grade, R.location, R.time, R.id, U.username FROM routes R, users U WHERE U.id = R.user_id AND R.user_id = :id AND R.visible = TRUE ORDER BY R.time DESC;")
     result = db.session.execute(sql, {"id": id}).fetchall()
     return result
 
@@ -63,3 +63,13 @@ def add_flash_data(route_id, user_id, flash):
         return True
     except:
         return False
+
+# user_id is optional parameter. if not given counts all climbs
+def amount_of_climbs(user_id=0):
+    if user_id == 0:
+        sql = text("SELECT COUNT(*) FROM routes R, users U WHERE R.user_id = U.id AND R.visible=TRUE;")
+        result = db.session.execute(sql)
+    else:
+        sql = text("SELECT COUNT(*) FROM routes R, users U WHERE R.user_id = U.id AND R.visible=TRUE AND R.user_id=:user_id;")
+        result = db.session.execute(sql, {"user_id": user_id})
+    return result.fetchone()[0]

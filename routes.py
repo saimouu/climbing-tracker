@@ -4,18 +4,18 @@ from flask import render_template, request, redirect
 
 # fix naming because now routes = climbs, it's confusing
 
+# TODO: index page should show maybe max 20 recent climbs
 @app.route("/")
 def index():
-    if users.user_id() != 0:
-        routes = climbs.get_all_climbs()
-        return render_template("index.html", routes=routes, count=len(routes))
-    else:
-        return redirect("/login")
+    routes = climbs.get_all_climbs()
+    count = climbs.amount_of_climbs()
+    return render_template("index.html", routes=routes, count=count)
 
 @app.route("/new")
 def new():
     return render_template("new.html")
 
+# should redirect to the created climb
 @app.route("/create", methods=["POST"])
 def create():
     grade = request.form["grade"]
@@ -82,12 +82,13 @@ def user_page(id):
     routes = climbs.get_climbs_by_user(id)
     hardest_route = climbs.get_users_hardest_climb(id)
     username = users.get_name_by_id(id)
-    # fix: user sql count not len
-    return render_template("user.html", routes=routes, count=len(routes), username=username, hardest_route=hardest_route)  
+    count = climbs.amount_of_climbs(id)
+    user_comments = comments.get_user_comments(id)
+    return render_template("user.html", routes=routes, count=count, username=username, hardest_route=hardest_route, user_comments=user_comments)  
 
 # fix redirect
 @app.route("/delete/<int:id>")
 def remove_climb(id):
     if climbs.delete_climb(id):
-        return redirect("/")
+        return redirect(f"/user/{users.user_id()}")
     return redirect("error.html", message="something went wrong...")

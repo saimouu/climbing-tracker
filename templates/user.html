@@ -1,19 +1,36 @@
-<h2>{{ username }}</h2>
+{% extends "base.html" %}
+{% block title %}Your Page{% endblock %}
+{% block header %}<h2>{{ username }}</h2>{% endblock %}
+{% block content %}
 {% if count != 0 %}
-<p>number of routes added by: {{ count }}</p>
-<p>hardest route {{ hardest_route.grade }} / {{ hardest_route.time.strftime("%d-%m-%Y") }}</p>
+<p>Number of routes added: {{ count }}</p>
+<p>Hardest route: {{ hardest_route.grade }} / {{ hardest_route.time.strftime("%d-%m-%Y") }}</p>
+<p>Hardest flash: </p>
 <hr>
 {% for route in routes %}
-<a href="/climb/{{ route.id }}">go to climb</a><br/>
-<b>grade:</b> {{ route.grade }}<br/>
-<b>location:</b> {{ route.location }}<br/>
-<b>added:</b> {{ route.time.strftime("%H:%M, %d-%m-%Y") }}<br/>
+<a href="/climb/{{ route.id }}">Go to climb</a><br/>
+<b>Grade:</b> {{ route.grade }}<br/>
+<b>Location:</b> {{ route.location }}<br/>
+<b>Time:</b> {{ route.time.strftime("%H:%M, %d-%m-%Y") }}<br/>
+<b>Flashed: </b>
 {% if routes[0].username == session.username %}
-<a href="/delete/{{ route.id }}">delete climb</a>
+<a href="/delete/{{ route.id }}">Delete climb</a>
 {% endif %}
 <hr>
 {% endfor %}
 {% else %}
-<p>no routes added yet...</p>
+<p>No routes added yet...</p>
 {% endif %}
-<a href="/">go back</a>
+{% endblock %}
+
+{% block side %}
+<br>
+<h3>Recent comments:</h3>
+<hr>
+{% for comment in user_comments %}
+<b>Comment: {{ comment.content }}</b><br>
+<b>Time: </b>{{ comment.time.strftime("%H:%M, %d-%m-%Y") }}<br>
+<a href="/climb/{{ comment.route_id }}">Go to climb</a>
+<hr>
+{% endfor %}
+{% endblock %}
