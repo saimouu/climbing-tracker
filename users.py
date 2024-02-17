@@ -20,7 +20,7 @@ def login(username, password):
 def register(username, password):
     hash_value = generate_password_hash(password)
     try:
-        sql = text("INSERT INTO users (username, password) VALUES (:username, :password)")
+        sql = text("INSERT INTO users (username, password, admin) VALUES (:username, :password, FALSE)")
         db.session.execute(sql, {"username": username, "password": hash_value})
         db.session.commit()
     except:
@@ -33,12 +33,17 @@ def logout():
 def user_id():
     return session.get("user_id", 0)
 
+def is_admin():
+    sql = text("SELECT admin FROM users WHERE id=:id")
+    result = db.session.execute(sql, {"id": user_id()})
+    return result
+
 def get_name_by_id(id):
     sql = text("SELECT username FROM users WHERE id=:id")
     result = db.session.execute(sql, {"id": id})
     return result.fetchone().username
 
 def valid_register(username, password):
-    if len(password) < 6 or len(username) < 4:
+    if len(password) < 6 or len(username) < 3:
         return False
     return True

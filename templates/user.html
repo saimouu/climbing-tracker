@@ -12,7 +12,7 @@
 <b>Grade:</b> {{ route.grade }}<br/>
 <b>Location:</b> {{ route.location }}<br/>
 <b>Time:</b> {{ route.time.strftime("%H:%M, %d-%m-%Y") }}<br/>
-<b>Flashed: </b>
+<b>Flashed:</b> {% if route.id in flashes %}Yes{% else %}No{% endif %}
 {% if routes[0].username == session.username %}
 <a href="/delete/{{ route.id }}">Delete climb</a>
 {% endif %}
@@ -28,7 +28,7 @@
 <h3>Recent comments:</h3>
 <hr>
 {% for comment in user_comments %}
-<b>Comment: {{ comment.content }}</b><br>
+<b>Comment: </b>{{ comment.content }}<br>
 <b>Time: </b>{{ comment.time.strftime("%H:%M, %d-%m-%Y") }}<br>
 <a href="/climb/{{ comment.route_id }}">Go to climb</a>
 <hr>

@@ -3,17 +3,24 @@
 {% block header %}<h2>Add a new route</h2>{% endblock %}
 {% block content %}
 <form action="/create" method="POST">
-Grade:<br>
-<textarea name="grade" rows="1" cols="40"></textarea><br>
-Location:<br>
-<textarea name="location" rows="1" cols="40"></textarea>
+<label for="grade"><b>Grade:</b></label>
+<input type="text" name="grade"><br>
+<!-- <textarea name="grade" rows="1" cols="20"></textarea><br> -->
+<!-- <textarea name="location" rows="1" cols="40"></textarea> -->
+<label for="locations"><b>Location:</b></label>
+<input type="text" list="locations" name="locations">
+<datalist id="locations">
+    {% for loc in locations %}
+    <option value="{{ loc.name }}">{{ loc.name }} </option>
+    {% endfor %}
+</datalist>
 <br>
-Indoor/Outdoor:
+<label for="indoor"><b>Indoor/Outdoor:</b></label>
 <select name="indoor" id="indoor">
     <option value="indoor">indoor</option>
     <option value="outdoor">outdoor</option>
 </select><br>
-Flash:
+<label for="flash"><b>Flash:</b></label>
 <select name="flash" id="flash">
     <option value="False">no</option>
     <option value="True">yes</option>
@@ -21,4 +28,14 @@ Flash:
 <br>
 <input type="submit" value="submit">
 </form>
+{% endblock %}
+
+{% block side %}
+<br>
+<h3>Moderator added locations:</h3>
+<hr>
+{% for loc in locations %}
+{{ loc.name }} // {{ loc.city }}, {{ loc.country }}<br>
+<hr>
+{% endfor %}
 {% endblock %}
