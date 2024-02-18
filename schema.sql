@@ -38,6 +38,14 @@ CREATE TABLE locations (
     name TEXT
 );
 
+CREATE TABLE images (
+    id SERIAL PRIMARY KEY,
+    img BYTEA,
+    name TEXT,
+    mimetype TEXT,
+    route_id INTEGER REFERENCES routes
+);
+
 INSERT INTO locations (city, country, name) VALUES ('Espoo', 'Finland', 'Boulderkeskus Espoo');
 INSERT INTO locations (city, country, name) VALUES ('Helsinki', 'Finland', 'Boulderkeskus Herttoniemi');
 INSERT INTO locations (city, country, name) VALUES ('Oulu', 'Finland', 'Oulun kiipeilykeskus');

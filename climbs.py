@@ -22,9 +22,9 @@ def create_climb(content):
         db.session.commit()
         route_id = temp_id_object.fetchone().id
         if flashes.add_flash_data(user_id=user_id, route_id=route_id, flash=flash):
-            return True
+            return (True, route_id)
     else:
-        return False
+        return (False, 0)
 
 def get_climb_by_id(id):
     sql = text("SELECT R.grade, R.location, R.time, R.id, R.user_id, U.username FROM routes R, users U WHERE R.user_id = U.id AND R.id = :id;")

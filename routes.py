@@ -1,6 +1,8 @@
 from app import app
-import climbs, users, comments, flashes, locations
+import climbs, users, comments, flashes, locations, images
 from flask import render_template, request, redirect, flash
+
+import base64
 
 # fix naming because now routes = climbs, it's confusing
 
@@ -21,26 +23,28 @@ def new():
     all_locations = locations.get_all_locations()
     return render_template("new.html", locations=all_locations, grades=grades)
 
-# should redirect to the created climb
-# also error messages are atm misleading
 @app.route("/create", methods=["POST"])
 def create():
-    grade = request.form["grade"]
-    location = request.form["locations"]
-    flashed = request.form["flash"]
-    if request.form["indoor"] == "indoor":
-        indoor = True
-    else:
-        indoor = False
+    grade, location, flashed = request.form["grade"], request.form["locations"], request.form["flash"]
+    indoor = True if request.form["indoor"] == "indoor"  else False
     content = {"grade": grade, "location": location, "indoor": indoor, "flash": flashed}
 
     if not climbs.check_climb_content(content=content):
         flash("Invalid inputs. Location must be at least 3 letter.", category="error")
         return redirect("/new")
 
-    if climbs.create_climb(content=content):
+    new_climb = climbs.create_climb(content=content)    # (bool, route_id)
+
+    # TODO: this implementation works, but isn't very pretty
+    if new_climb[0]:
+        if "img" in request.files:
+            image = request.files["img"]
+            if image.filename != "":
+                if not images.upload_image(image=image, route_id=new_climb[1]):
+                    flash("Check your image file format", category="error")
+                    return redirect("/new")
         flash("Route added!", category="success")
-        return redirect("/")
+        return redirect(f"/climb/{new_climb[1]}")
     else:
         flash("You have to be logged in to add a route.", category="error")
         return redirect("/login")
@@ -58,7 +62,6 @@ def login():
         else:
             flash("Check your username and password", category="error")
             return redirect("/login")
-            #return render_template("error.html", message="wrong username or password")
         
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -90,7 +93,9 @@ def logout():
 def climb(id):
     route = climbs.get_climb_by_id(id)
     contents = comments.get_comments_by_climb(id)
-    return render_template("climb.html", route=route, contents=contents)
+    image_info = images.get_image(id)
+    image = base64.b64encode(image_info.img).decode("ascii") if image_info else None
+    return render_template("climb.html", route=route, contents=contents, image_info=image_info, image=image)
 
 @app.route("/comment/<int:id>", methods=["POST"])
 def comment(id):

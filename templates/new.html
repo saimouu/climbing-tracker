@@ -2,7 +2,8 @@
 {% block title %}Create{% endblock %}
 {% block header %}<h2>Add a new route</h2>{% endblock %}
 {% block content %}
-<form action="/create" method="POST">
+<!-- enctype must be added otherwise file uploads don't work-->
+<form action="/create" method="POST" enctype="multipart/form-data">
 <label for="grade"><b>Grade:</b></label>
 <select name="grade">
     {% for grade in grades %}
@@ -27,6 +28,8 @@
     <option value="False">no</option>
     <option value="True">yes</option>
 </select><br>
+<label for="img"><b>Upload an image (optional):</b></label>
+<input type="file" name="img" id="img">
 <br>
 <input type="submit" value="submit">
 </form>
