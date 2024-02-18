@@ -4,34 +4,53 @@
 {% block content %}
 <!-- enctype must be added otherwise file uploads don't work-->
 <form action="/create" method="POST" enctype="multipart/form-data">
-<label for="grade"><b>Grade:</b></label>
-<select name="grade">
-    {% for grade in grades %}
-    <option value="{{ grade }}">{{ grade }}</option>
-    {% endfor %}
-</select><br>
-<label for="locations"><b>Location:</b></label>
-<input type="text" list="locations" name="locations" placeholder="At least 3 letters">
-<datalist id="locations">
-    {% for loc in locations %}
-    <option value="{{ loc.name }}">{{ loc.name }} </option>
-    {% endfor %}
-</datalist>
-<br>
-<label for="indoor"><b>Indoor/Outdoor:</b></label>
-<select name="indoor" id="indoor">
-    <option value="indoor">indoor</option>
-    <option value="outdoor">outdoor</option>
-</select><br>
-<label for="flash"><b>Flash:</b></label>
-<select name="flash" id="flash">
-    <option value="False">no</option>
-    <option value="True">yes</option>
-</select><br>
-<label for="img"><b>Upload an image (optional):</b></label>
-<input type="file" name="img" id="img">
-<br>
-<input type="submit" value="submit">
+    
+    <div class="mb-3">
+        <label for="grade" class="form-label">Grade:</label>
+        <select name="grade" class="form-select" aria-label="Default select example">
+            {% for grade in grades %}
+            <option value="{{ grade }}">{{ grade }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="locations" class="form-label">Location:</label>
+        <input class="form-control" type="text" list="locations" name="locations" placeholder="">
+        <datalist id="locations">
+            {% for loc in locations %}
+            <option value="{{ loc.name }}">{{ loc.name }} </option>
+            {% endfor %}
+        </datalist>
+    </div>
+    <div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="indoor" id="indoor" value="True" checked>
+            <label class="form-check-label" for="indoor">Indoor</label>
+        </div>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="radio" name="indoor" id="outdoor" value="False">
+            <label class="form-check-label" for="outdoor">Outdoor</label>
+        </div>
+    </div>
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" value="True" name="flash">
+        <label class="form-check-label" for="flash">Flash</label>
+    </div>
+      
+    <!--
+    <label for="flash"><b>Flash:</b></label>
+    <select name="flash" id="flash">
+        <option value="False">no</option>
+        <option value="True">yes</option>
+    </select><br>
+    -->
+    <div class="mb-3">
+        <label for="img" class="form-label">Upload an image (optional):</label>
+        <input type="file" name="img" id="img" class="form-control" aria-label="file example">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
 </form>
 {% endblock %}
 

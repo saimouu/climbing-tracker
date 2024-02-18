@@ -25,10 +25,9 @@ def new():
 
 @app.route("/create", methods=["POST"])
 def create():
-    grade, location, flashed = request.form["grade"], request.form["locations"], request.form["flash"]
-    indoor = True if request.form["indoor"] == "indoor"  else False
+    grade, location, indoor = request.form["grade"], request.form["locations"], request.form["indoor"]
+    flashed = True if "flash" in request.form else False
     content = {"grade": grade, "location": location, "indoor": indoor, "flash": flashed}
-
     if not climbs.check_climb_content(content=content):
         flash("Invalid inputs. Location must be at least 3 letter.", category="error")
         return redirect("/new")

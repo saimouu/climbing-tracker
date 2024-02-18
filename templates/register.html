@@ -3,13 +3,18 @@
 {% block header %}<h2>Register</h2>{% endblock %}
 {% block content %}
 <form action="/register" method="POST">
-<p>username:<br>
-<input type="text" name="username"></p>
-<p>password:<br>
-<input type="password" name="password"></p>
-<p>password again...:<br>
-<input type="password" name="password2"></p>
-<input type="submit" value="register">
+    <div class="mb-3">
+        <label for="username" class="form-label">Username:</label>
+        <input type="text" name="username" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password:</label>
+        <input type="password" name="password" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label for="password2" class="form-label">Password again:</label>
+        <input type="password" name="password2" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
 </form>
-To login click <a href="/login">here</a>
 {% endblock %}

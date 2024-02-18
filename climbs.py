@@ -3,7 +3,7 @@ from sqlalchemy.sql import text
 import users, flashes
 
 def get_all_climbs():
-    sql = text("SELECT R.grade, R.location, R.time, R.id, U.username, R.user_id FROM routes R, users U WHERE R.user_id = U.id AND R.visible=TRUE ORDER BY R.time DESC;")
+    sql = text("SELECT R.grade, R.location, R.time, R.id, U.username, R.user_id, R.indoor FROM routes R, users U WHERE R.user_id = U.id AND R.visible=TRUE ORDER BY R.time DESC;")
     result = db.session.execute(sql)
     return result.fetchall()
 
