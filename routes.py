@@ -113,7 +113,12 @@ def user_page(id):
     count = climbs.amount_of_climbs(id)
     username = users.get_name_by_id(id)
     user_comments = comments.get_user_comments(id)
-    return render_template("user.html", routes=routes, count=count, username=username, hardest_route=hardest_route, user_comments=user_comments, flashes=user_flashes)  
+
+    grade_distribution = climbs.get_user_grade_distribution(id)
+    labels = [row[0] for row in grade_distribution]
+    values = [row[1] for row in grade_distribution]
+
+    return render_template("user.html", routes=routes, count=count, username=username, hardest_route=hardest_route, user_comments=user_comments, flashes=user_flashes, labels=labels, values=values)  
 
 
 @app.route("/delete/<int:id>", methods=["POST"])
