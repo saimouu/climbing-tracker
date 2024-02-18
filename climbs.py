@@ -8,18 +8,12 @@ def get_all_climbs():
     return result.fetchall()
 
 def check_climb_content(content):
-    if len(content["grade"]) < 1 or len(content["location"]) < 2:
+    if len(content["grade"]) < 1 or len(content["location"]) < 3:
         return False
     return True
 
 def create_climb(content):
-    # TODO: different error message
-    if not check_climb_content(content=content):
-        return False
-    grade = content["grade"]
-    location = content["location"]
-    indoor = content["indoor"]
-    flash = content["flash"]
+    grade, location, indoor, flash = content["grade"], content["location"], content["indoor"], content["flash"]
     user_id = users.user_id()
     if user_id != 0:       
         sql = """INSERT INTO routes (grade, location, user_id, time, visible, indoor) 
@@ -38,7 +32,7 @@ def get_climb_by_id(id):
     return result
 
 def get_climbs_by_user(id):
-    sql = text("SELECT R.grade, R.location, R.time, R.id, U.username FROM routes R, users U WHERE U.id = R.user_id AND R.user_id = :id AND R.visible = TRUE ORDER BY R.time DESC;")
+    sql = text("SELECT R.grade, R.location, R.time, R.id, U.username, U.id AS user_id FROM routes R, users U WHERE U.id = R.user_id AND R.user_id = :id AND R.visible = TRUE ORDER BY R.time DESC;")
     result = db.session.execute(sql, {"id": id}).fetchall()
     return result
 
@@ -64,3 +58,8 @@ def amount_of_climbs(user_id=0):
         sql = text("SELECT COUNT(*) FROM routes R, users U WHERE R.user_id = U.id AND R.visible=TRUE AND R.user_id=:user_id;")
         result = db.session.execute(sql, {"user_id": user_id})
     return result.fetchone()[0]
+
+def valid_grades():
+    font_scale = ["4", "5", "5+", "6a", "6a+", "6b", "6b+", "6c", "6c+",
+    "7a", "7a+", "7b", "7b+", "7c", "7c+", "8a", "8a+", "8b", "8b+", "8c", "8c+", "9a"]
+    return font_scale

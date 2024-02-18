@@ -20,7 +20,8 @@ CREATE TABLE comments (
     content TEXT,
     user_id INTEGER REFERENCES users,
     route_id INTEGER REFERENCES routes,
-    time TIMESTAMP
+    time TIMESTAMP,
+    visible BOOLEAN
 );
 
 CREATE TABLE flashes (

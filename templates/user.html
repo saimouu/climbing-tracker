@@ -3,9 +3,8 @@
 {% block header %}<h2>{{ username }}</h2>{% endblock %}
 {% block content %}
 {% if count != 0 %}
-<p>Number of routes added: {{ count }}</p>
-<p>Hardest route: {{ hardest_route.grade }} / {{ hardest_route.time.strftime("%d-%m-%Y") }}</p>
-<p>Hardest flash: </p>
+<b>Number of routes added:</b> {{ count }} <br>
+<b>Hardest route: </b> {{ hardest_route.grade }} / {{ hardest_route.time.strftime("%d-%m-%Y") }}
 <hr>
 {% for route in routes %}
 <a href="/climb/{{ route.id }}">Go to climb</a><br/>
@@ -13,8 +12,10 @@
 <b>Location:</b> {{ route.location }}<br/>
 <b>Time:</b> {{ route.time.strftime("%H:%M, %d-%m-%Y") }}<br/>
 <b>Flashed:</b> {% if route.id in flashes %}Yes{% else %}No{% endif %}
-{% if routes[0].username == session.username %}
-<a href="/delete/{{ route.id }}">Delete climb</a>
+{% if routes[0].user_id == session.user_id %}
+<form action="/delete/{{ route.id }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this climb?');">
+    <input type="submit" value="delete">
+</form>
 {% endif %}
 <hr>
 {% endfor %}
@@ -30,7 +31,7 @@
 {% for comment in user_comments %}
 <b>Comment: </b>{{ comment.content }}<br>
 <b>Time: </b>{{ comment.time.strftime("%H:%M, %d-%m-%Y") }}<br>
-<a href="/climb/{{ comment.route_id }}">Go to climb</a>
+<a href="/climb/{{ comment.route_id }}">Go to route</a>
 <hr>
 {% endfor %}
 {% endblock %}

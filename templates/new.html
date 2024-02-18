@@ -4,11 +4,13 @@
 {% block content %}
 <form action="/create" method="POST">
 <label for="grade"><b>Grade:</b></label>
-<input type="text" name="grade"><br>
-<!-- <textarea name="grade" rows="1" cols="20"></textarea><br> -->
-<!-- <textarea name="location" rows="1" cols="40"></textarea> -->
+<select name="grade">
+    {% for grade in grades %}
+    <option value="{{ grade }}">{{ grade }}</option>
+    {% endfor %}
+</select><br>
 <label for="locations"><b>Location:</b></label>
-<input type="text" list="locations" name="locations">
+<input type="text" list="locations" name="locations" placeholder="At least 3 letters">
 <datalist id="locations">
     {% for loc in locations %}
     <option value="{{ loc.name }}">{{ loc.name }} </option>

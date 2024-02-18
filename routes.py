@@ -11,12 +11,18 @@ def index():
     count = climbs.amount_of_climbs()
     return render_template("index.html", routes=routes, count=count)
 
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
 @app.route("/new")
 def new():
+    grades = climbs.valid_grades()
     all_locations = locations.get_all_locations()
-    return render_template("new.html", locations=all_locations)
+    return render_template("new.html", locations=all_locations, grades=grades)
 
 # should redirect to the created climb
+# also error messages are atm misleading
 @app.route("/create", methods=["POST"])
 def create():
     grade = request.form["grade"]
@@ -26,8 +32,14 @@ def create():
         indoor = True
     else:
         indoor = False
+    content = {"grade": grade, "location": location, "indoor": indoor, "flash": flashed}
 
-    if climbs.create_climb({"grade": grade, "location": location, "indoor": indoor, "flash": flashed}):
+    if not climbs.check_climb_content(content=content):
+        flash("Invalid inputs. Location must be at least 3 letter.", category="error")
+        return redirect("/new")
+
+    if climbs.create_climb(content=content):
+        flash("Route added!", category="success")
         return redirect("/")
     else:
         flash("You have to be logged in to add a route.", category="error")
@@ -60,7 +72,7 @@ def register():
             flash("Passwords don't match", category="error")
             return redirect("/register")
         if not users.valid_register(username, password1):
-            flash("Invalid username or password. Username must be atleast 3 letters and password 6 letters.", category="error")
+            flash("Invalid username or password. Username must be at least 3 letters and password 6 letters.", category="error")
             return redirect("/register")
         if users.register(username, password1):
             flash("Account created! You're now logged in.", category="success")
@@ -71,6 +83,7 @@ def register():
 @app.route("/logout")
 def logout():
     users.logout()
+    flash("Logged out.", category="success")
     return redirect("/")
 
 @app.route("/climb/<int:id>")
@@ -84,6 +97,8 @@ def comment(id):
     content = (request.form["content"], id)
     if comments.add_comment(content):
         return redirect(f"/climb/{id}")
+    flash("Something went wrong...", category="error")      # just in case
+    return redirect("/")
 
 @app.route("/user/<int:id>")
 def user_page(id):
@@ -96,10 +111,19 @@ def user_page(id):
     return render_template("user.html", routes=routes, count=count, username=username, hardest_route=hardest_route, user_comments=user_comments, flashes=user_flashes)  
 
 
-@app.route("/delete/<int:id>")
+@app.route("/delete/<int:id>", methods=["POST"])
 def remove_climb(id):
     if climbs.delete_climb(id):
         flash("Climb deleted.", category="success")
         return redirect(f"/user/{users.user_id()}")
+    flash("Something went wrong...", category="error")      # just in case
+    return redirect("/")
+
+@app.route("/delete/comment/<int:id>", methods=["POST"])
+def remove_comment(id):
+    comment_climb = comments.get_comment_climb(id)
+    if comments.remove_comment(id):
+        flash("Comment deleted.", category="success")
+        return redirect(f"/climb/{comment_climb}")
     flash("Something went wrong...", category="error")
-    return redirect("error.html", message="something went wrong...")
+    return redirect("/")
