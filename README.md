@@ -12,16 +12,16 @@ yhteenvetoa kiivetyistä reiteistä ja seurata mahdollisten tavoitteiden etenemi
       - vaikeustaso, sijainti, ulko/sisä reitti, flash (ei/kyllä), kuva
    - Reittejä voi selata ja niitä kommentoida
    - Käyttäjä voi poistaa omia reittejään ja kommenttejaan
-   - Käyttäjä näkee omalla sivullaan omat reittinsä ja kommenttinsa
+   - Käyttäjä näkee omalla sivullaan omat reittinsä, vaikeustasojen jakauman ja kommenttinsa
    - Käyttäjä voi tutkia muiden käyttäjien sivuja
 
 ## Mahdollisia listättäviä ominaisuuksia
-   - Kaavio omalle sivulle lisättyjen reittien vaikeustason jakaumasta
    - Haku ominaisuus tiedettyjen sijaintien perusteella
    - Reittien lisääminen yksityisiksi
+   - Admin työkalujen järkevä toteutus
 
 ## Ohjeet sovelluksen testaamiseen paikallisesti
-Kloonaat tämä repositorio ja luo sen juurikansioon seuraavanlainen .env tiedosto.
+Kloonaa tämä repositorio ja luo sen juurikansioon seuraavanlainen .env tiedosto.
 
 ```
 DATABASE_URL=<tietokannan osoite>
