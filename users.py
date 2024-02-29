@@ -1,6 +1,6 @@
+from secrets import token_hex
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
-from secrets import token_hex
 from flask import session, abort
 from db import db
 
@@ -54,4 +54,16 @@ def valid_register(username, password):
 def check_csfr_token(token):
     if session["csrf_token"] != token:
         abort(403)
-        
+
+def search_users(query):
+    if len(query) >= 3:
+        sql = """
+            SELECT U.id, U.username, COUNT(R.id) as route_count
+            FROM users U 
+            LEFT JOIN routes R ON U.id=R.user_id 
+            WHERE U.username LIKE :query AND R.visible=TRUE 
+            GROUP BY U.id;
+        """
+        result = db.session.execute(text(sql), {"query": "%"+query+"%"})
+        return result.fetchall()
+    return False

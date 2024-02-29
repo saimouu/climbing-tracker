@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Search{% endblock %}
+{% block header %}<h2>Results</h2>{% endblock %}
+
+{% block content %}
+{% if data %}
+{% for user in data %}
+<a href="/user/{{ user.id }}">{{ user.username }}</a><br/>
+<b>Number of routes added: </b>{{ user.route_count }}
+<hr>
+{% endfor %}
+{% else %}
+<p>No results...</p>
+{% endif %}
+{% endblock %}

@@ -46,9 +46,11 @@ def get_climb_by_id(id):
     return result
 
 def get_climbs_by_user(id):
-    sql = """
-        SELECT R.grade, R.location, R.time, R.id, U.username, U.id AS user_id 
-        FROM routes R, users U WHERE U.id = R.user_id AND R.user_id = :id AND R.visible=TRUE 
+    sql = """SELECT R.grade, R.location, R.time, R.id, U.username, U.id AS user_id, F.flash   
+        FROM routes R 
+        LEFT JOIN users U ON U.id=R.user_id 
+        LEFT JOIN flashes F ON F.user_id=R.user_id AND F.route_id=R.id
+        WHERE U.id=:id AND R.visible=TRUE
         ORDER BY R.time DESC;
     """
     result = db.session.execute(text(sql), {"id": id}).fetchall()

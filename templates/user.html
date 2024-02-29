@@ -6,7 +6,8 @@
 {% block content %}
 {% if count != 0 %}
 <b>Number of routes added:</b> {{ count }} <br>
-<b>Hardest route: </b> {{ hardest_route.grade }} / {{ hardest_route.time.strftime("%d-%m-%Y") }}
+<b>Hardest route: </b> {{ hardest_route.grade }} / {{ hardest_route.time.strftime("%d-%m-%Y") }}<br>
+<b>Average flash rate: </b> {{ avg_flash }}%
 <hr>
 
 <div>
@@ -41,8 +42,7 @@
 <b>Grade:</b> {{ route.grade }}<br/>
 <b>Location:</b> {{ route.location }}<br/>
 <b>Time:</b> {{ route.time.strftime("%H:%M, %d-%m-%Y") }}<br/>
-<b>Flashed:</b> {% if route.id in flashes %}Yes{% else %}No{% endif %}
-
+<b>Flashed:</b> {% if route.flash == True %}Yes{% else %}No{% endif %}
 {% if routes[0].user_id == session.user_id %}
 <form action="/delete/{{ route.id }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this route?');">
     <button type="submit" class="btn btn-danger">Delete</button>

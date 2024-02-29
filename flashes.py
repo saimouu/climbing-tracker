@@ -20,3 +20,13 @@ def get_flashes(user_id):
     """
     result = db.session.execute(text(sql), {"user_id": user_id}).fetchall()
     return result
+
+def user_avg_flash(user_id):
+    sql = """
+        SELECT ROUND(AVG(F.flash::INT) * 100, 1) 
+        FROM Flashes F 
+        LEFT JOIN Routes R ON F.route_id=R.id AND F.user_id=R.user_id 
+        WHERE F.user_id=:user_id AND R.visible=TRUE;
+    """
+    result = db.session.execute(text(sql), {"user_id": user_id}).fetchone()
+    return result[0]
