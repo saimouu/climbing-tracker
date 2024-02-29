@@ -6,7 +6,7 @@ def add_comment(content: tuple):
     comment = content[0]
     route_id = content[1]
     user_id = users.user_id()
-    if user_id != 0 and len(comment) > 3:
+    if user_id != 0:
         sql = """
             INSERT INTO comments (content, user_id, route_id, time, visible) 
             VALUES (:content, :user_id, :route_id, NOW(), TRUE)

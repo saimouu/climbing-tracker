@@ -48,9 +48,11 @@
     <div class="mb-3">
         <label for="img" class="form-label">Upload an image (optional):</label>
         <input type="file" name="img" id="img" class="form-control" aria-label="file example">
+        <i>.png .jpg .jpeg / max 100 kB</i>
     </div>
 
     <button type="submit" class="btn btn-primary">Create</button>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 {% endblock %}
 

@@ -13,9 +13,9 @@ def get_all_climbs():
     return result.fetchall()
 
 def check_climb_content(content):
-    if len(content["grade"]) < 1 or len(content["location"]) < 3:
-        return False
-    return True
+    if 3 <= len(content["location"]) <= 100:
+        return True
+    return False
 
 def create_climb(content):
     grade, location = content["grade"], content["location"]

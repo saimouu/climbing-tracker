@@ -1,6 +1,7 @@
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask import session
+from secrets import token_hex
+from flask import session, abort
 from db import db
 
 def login(username, password):
@@ -12,6 +13,7 @@ def login(username, password):
     if check_password_hash(user.password, password):
         session["user_id"] = user.id
         session["username"] = username
+        session["csrf_token"] = token_hex(16)
         return True
     return False
 
@@ -48,3 +50,8 @@ def valid_register(username, password):
     if len(password) < 6 or len(username) < 3:
         return False
     return True
+
+def check_csfr_token(token):
+    if session["csrf_token"] != token:
+        abort(403)
+        

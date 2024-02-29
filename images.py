@@ -13,6 +13,8 @@ def upload_image(image, route_id):
         filename = secure_filename(image.filename)
         mimetype = image.mimetype
         img = image.read()
+        if len(img) > 100*1024:
+            return False
         sql = """
             INSERT INTO images (img, name, mimetype, route_id) 
             VALUES (:img, :name, :mimetype, :route_id)
