@@ -46,6 +46,7 @@ CREATE TABLE images (
     route_id INTEGER REFERENCES routes
 );
 
+-- Test locations
 INSERT INTO locations (city, country, name) VALUES ('Espoo', 'Finland', 'Boulderkeskus Espoo');
 INSERT INTO locations (city, country, name) VALUES ('Helsinki', 'Finland', 'Boulderkeskus Herttoniemi');
 INSERT INTO locations (city, country, name) VALUES ('Oulu', 'Finland', 'Oulun kiipeilykeskus');

@@ -1,10 +1,13 @@
-from app import app
-import climbs, users, comments, flashes, locations, images
-from flask import render_template, request, redirect, flash
-
 import base64
+from flask import render_template, request, redirect, flash
+from app import app
 
-# fix naming because now routes = climbs, it's confusing
+import climbs
+import users
+import comments
+import flashes
+import locations
+import images
 
 # TODO: index page should show maybe max 20 recent climbs
 @app.route("/")
@@ -44,10 +47,9 @@ def create():
                     return redirect("/new")
         flash("Route added!", category="success")
         return redirect(f"/climb/{new_climb[1]}")
-    else:
-        flash("You have to be logged in to add a route.", category="error")
-        return redirect("/login")
-    
+    flash("You have to be logged in to add a route.", category="error")
+    return redirect("/login")
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
@@ -58,10 +60,9 @@ def login():
         if users.login(username, password):
             flash("You are now logged in", category="success")
             return redirect("/")
-        else:
-            flash("Check your username and password", category="error")
-            return redirect("/login")
-        
+        flash("Check your username and password", category="error")
+        return redirect("/login")
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
@@ -74,13 +75,14 @@ def register():
             flash("Passwords don't match", category="error")
             return redirect("/register")
         if not users.valid_register(username, password1):
-            flash("Invalid username or password. Username must be at least 3 letters and password 6 letters.", category="error")
+            flash("""Invalid username or password. Username must be at least 3 letters
+            and password 6 letters.""", category="error")
             return redirect("/register")
         if users.register(username, password1):
             flash("Account created! You're now logged in.", category="success")
             return redirect("/")
-        else:
-            flash("Failed to register. Try a different username.", category="error")
+        flash("Failed to register. Try a different username.", category="error")
+        return redirect("/register")
 
 @app.route("/logout")
 def logout():
@@ -94,14 +96,16 @@ def climb(id):
     contents = comments.get_comments_by_climb(id)
     image_info = images.get_image(id)
     image = base64.b64encode(image_info.img).decode("ascii") if image_info else None
-    return render_template("climb.html", route=route, contents=contents, image_info=image_info, image=image)
+    return render_template(
+        "climb.html", route=route, contents=contents, 
+        image_info=image_info, image=image)
 
 @app.route("/comment/<int:id>", methods=["POST"])
 def comment(id):
     content = (request.form["content"], id)
     if comments.add_comment(content):
         return redirect(f"/climb/{id}")
-    flash("Something went wrong...", category="error")      # just in case
+    flash("Something went wrong...", category="error")
     return redirect("/")
 
 @app.route("/user/<int:id>")
@@ -117,7 +121,9 @@ def user_page(id):
     labels = [row[0] for row in grade_distribution]
     values = [row[1] for row in grade_distribution]
 
-    return render_template("user.html", routes=routes, count=count, username=username, hardest_route=hardest_route, user_comments=user_comments, flashes=user_flashes, labels=labels, values=values)  
+    return render_template(
+        "user.html", routes=routes, count=count, username=username, hardest_route=hardest_route,
+        user_comments=user_comments, flashes=user_flashes, labels=labels, values=values)  
 
 
 @app.route("/delete/<int:id>", methods=["POST"])
@@ -125,7 +131,7 @@ def remove_climb(id):
     if climbs.delete_climb(id):
         flash("Climb deleted.", category="success")
         return redirect(f"/user/{users.user_id()}")
-    flash("Something went wrong...", category="error")      # just in case
+    flash("Something went wrong...", category="error")
     return redirect("/")
 
 @app.route("/delete/comment/<int:id>", methods=["POST"])

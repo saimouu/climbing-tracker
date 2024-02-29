@@ -1,6 +1,6 @@
-from db import db
 from sqlalchemy.sql import text
 from werkzeug.utils import secure_filename
+from db import db
 
 # Flask docs: Uploading Files
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
@@ -13,14 +13,17 @@ def upload_image(image, route_id):
         filename = secure_filename(image.filename)
         mimetype = image.mimetype
         img = image.read()
-
-        sql = text("INSERT INTO images (img, name, mimetype, route_id) VALUES (:img, :name, :mimetype, :route_id)")
-        db.session.execute(sql, {"img": img, "name": filename, "mimetype": mimetype, "route_id": route_id})
+        sql = """
+            INSERT INTO images (img, name, mimetype, route_id) 
+            VALUES (:img, :name, :mimetype, :route_id)
+        """
+        db.session.execute(text(sql), {"img": img, "name": filename,
+         "mimetype": mimetype, "route_id": route_id})
         db.session.commit()
         return True
     return False
 
 def get_image(route_id):
-    sql = text("SELECT * FROM images WHERE route_id=:route_id")
-    result = db.session.execute(sql, {"route_id":route_id}).fetchone()
+    sql = "SELECT * FROM images WHERE route_id=:route_id"
+    result = db.session.execute(text(sql), {"route_id":route_id}).fetchone()
     return result

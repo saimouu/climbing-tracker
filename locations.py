@@ -1,13 +1,13 @@
-from db import db
 from sqlalchemy.sql import text
+from db import db
 import users
 
 def get_all_locations():
-    sql = text("SELECT * FROM locations;")
-    result = db.session.execute(sql)
+    sql = "SELECT * FROM locations;"
+    result = db.session.execute(text(sql))
     return result.fetchall()
 
 def add_location(content):
     if users.is_admin():
-        # TODO: 
+        # TODO:
         pass
