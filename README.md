@@ -14,9 +14,9 @@ yhteenvetoa kiivetyistä reiteistä ja seurata mahdollisten tavoitteiden etenemi
    - Käyttäjä voi poistaa omia reittejään ja kommenttejaan
    - Käyttäjä näkee omalla sivullaan omat reittinsä, vaikeustasojen jakauman ja kommenttinsa
    - Käyttäjä voi tutkia muiden käyttäjien sivuja
+   - Reittejä ja käyttäjiä pystyy hakemaan
 
 ## Mahdollisia listättäviä ominaisuuksia
-   - Haku ominaisuus tiedettyjen sijaintien perusteella
    - Reittien lisääminen yksityisiksi
    - Admin työkalujen järkevä toteutus
 
