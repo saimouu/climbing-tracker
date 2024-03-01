@@ -7,7 +7,8 @@ def get_all_climbs():
     sql = """
         SELECT R.grade, R.location, R.time, R.id, U.username, R.user_id, R.indoor 
         FROM routes R, users U 
-        WHERE R.user_id = U.id AND R.visible=TRUE ORDER BY R.time DESC;
+        WHERE R.user_id = U.id AND R.visible=TRUE 
+        ORDER BY R.time DESC;
     """
     result = db.session.execute(text(sql))
     return result.fetchall()
@@ -31,10 +32,9 @@ def create_climb(content):
          "user_id": user_id, "indoor": indoor})
         db.session.commit()
         route_id = temp_id_object.fetchone().id
-        if flashes.add_flash_data(user_id=user_id, route_id=route_id, flash=flash):
-            return (True, route_id)
-    else:
-        return (False, 0)
+        flashes.add_flash_data(user_id=user_id, route_id=route_id, flash=flash)
+        return (True, route_id)
+    return (False, 0)
 
 def get_climb_by_id(id):
     sql = """
@@ -45,15 +45,16 @@ def get_climb_by_id(id):
     result = db.session.execute(text(sql), {"id": id}).fetchone()
     return result
 
-def get_climbs_by_user(id):
-    sql = """SELECT R.grade, R.location, R.time, R.id, U.username, U.id AS user_id, F.flash   
+def get_climbs_by_user(user_id):
+    sql = """
+        SELECT R.grade, R.location, R.time, R.id, U.username, U.id AS user_id, F.flash 
         FROM routes R 
         LEFT JOIN users U ON U.id=R.user_id 
         LEFT JOIN flashes F ON F.user_id=R.user_id AND F.route_id=R.id
-        WHERE U.id=:id AND R.visible=TRUE
+        WHERE U.id=:user_id AND R.visible=TRUE
         ORDER BY R.time DESC;
     """
-    result = db.session.execute(text(sql), {"id": id}).fetchall()
+    result = db.session.execute(text(sql), {"user_id": user_id}).fetchall()
     return result
 
 def delete_climb(id):
@@ -101,3 +102,14 @@ def get_user_grade_distribution(user_id):
         GROUP BY grade ORDER BY grade;"""
     result = db.session.execute(text(sql), {"user_id": user_id}).fetchall()
     return result
+
+def search_by_location(query):
+    sql = """
+        SELECT R.grade, R.location, R.time, R.id, U.username, R.user_id, R.indoor 
+        FROM routes R, Users U 
+        WHERE R.user_id=U.id AND R.visible=TRUE 
+        AND LOWER(R.location) LIKE :query
+        ORDER BY R.time DESC;
+    """
+    result = db.session.execute(text(sql), {"query": "%"+query+"%"})
+    return result.fetchall()

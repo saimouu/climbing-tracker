@@ -154,6 +154,15 @@ def remove_comment(id):
 
 @app.route("/search", methods=["POST"])
 def search():
+    users.check_csfr_token(request.form["csrf_token"])
     query = request.form["query"]
+    if len(query) < 3:
+        flash("Search query must be at least 3 characters long.", category="error")
+        return redirect("/")
+
     users_found = users.search_users(query)
-    return render_template("search.html", data=users_found)
+    climbs_found_by_location = climbs.search_by_location(query)
+    
+    count = len(users_found) + len(climbs_found_by_location)
+    return render_template("search.html", users=users_found, 
+        routes=climbs_found_by_location, count=count)

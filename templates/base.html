@@ -28,9 +28,10 @@
             </li>
           </ul>
           <form action="/search" method="POST" class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search users" aria-label="Search" name="query">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
             <button class="btn btn-outline-success" type="submit">Search</button>
-          </form>    
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+          </form>
       </nav>
       
       <!-- Error and success messages-->
@@ -63,7 +64,7 @@
               <p>logged in as {{ session.username }}</p>
               <a href="/logout">logout</a>
               {% else %}
-              <a href="/login">Login</a> // <a href="/register">Register</a>
+              <a href="/login">Login</a> | <a href="/register">Register</a>
               {% endif %}
           </div>
       </div>

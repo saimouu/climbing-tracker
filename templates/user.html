@@ -61,6 +61,9 @@
 <br>
 <h3>Recent comments:</h3>
 <hr>
+{% if user_comments |length ==0 %}
+<p>No comments...</p>
+{% else %}
 {% for comment in user_comments %}
 {% if comment.content |length >100 %}
 <b>Comment: </b>{{ comment.content[0:100] }}...(continues)<br>
@@ -71,4 +74,5 @@
 <a href="/climb/{{ comment.route_id }}">Go to route</a>
 <hr>
 {% endfor %}
+{% endif %}
 {% endblock %}
