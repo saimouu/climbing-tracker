@@ -154,7 +154,6 @@ def remove_comment(id):
 
 @app.route("/search", methods=["POST"])
 def search():
-    users.check_csfr_token(request.form["csrf_token"])
     query = request.form["query"]
     if len(query) < 3:
         flash("Search query must be at least 3 characters long.", category="error")
